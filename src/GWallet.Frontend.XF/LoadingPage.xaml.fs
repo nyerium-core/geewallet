@@ -1,11 +1,24 @@
 ﻿namespace GWallet.Frontend.XF
 
+open System
 open System.Linq
 
 open Xamarin.Forms
 open Xamarin.Forms.Xaml
 
 open GWallet.Backend
+
+module DummyLoadingPageHelper =
+
+    [<Literal>]
+    let CtorWarning =
+        "DO NOT USE THIS! This paramaterless constructor is only here to allow the VS designer to render page"
+
+    let DummyFuncToRaiseException(): FrontendHelpers.IGlobalAppState =
+#if !DEBUG // if we put the failwith in DEBUG mode, then the VS designer crashes with it when trying to render
+        failwith CtorWarning
+#endif
+        GlobalState() :> FrontendHelpers.IGlobalAppState
 
 type LoadingPage(state: FrontendHelpers.IGlobalAppState) as this =
     inherit ContentPage()
@@ -20,6 +33,9 @@ type LoadingPage(state: FrontendHelpers.IGlobalAppState) as this =
 
     do
         this.Init()
+
+    [<Obsolete(DummyLoadingPageHelper.CtorWarning)>]
+    new() = LoadingPage(DummyLoadingPageHelper.DummyFuncToRaiseException())
 
     member this.Init (): unit =
 
