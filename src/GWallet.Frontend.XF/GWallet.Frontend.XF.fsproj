@@ -6,6 +6,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="FrontendHelpers.fs" />
+    <Compile Include="GlobalState.fs" />
     <Compile Include="PairingFromPage.xaml.fs">
       <DependentUpon>PairingFromPage.xaml</DependentUpon>
     </Compile>
@@ -27,6 +28,7 @@
     <Compile Include="WelcomePage.xaml.fs">
       <DependentUpon>WelcomePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Initialization.fs" />
     <Compile Include="App.xaml.fs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
