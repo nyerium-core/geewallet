@@ -112,7 +112,8 @@ module JsonRpcSharp =
                     if (socketException.IsNone) then
                         reraise()
                     if (socketException.Value.ErrorCode = int SocketError.HostNotFound ||
-                        socketException.Value.ErrorCode = int SocketError.TryAgain) then
+                        socketException.Value.ErrorCode = int SocketError.TryAgain ||
+                        socketException.Value.ErrorCode = int SocketError.ConnectionReset) then
                         raise(ServerCannotBeResolvedException(exceptionMsg, ex))
                     raise(UnhandledSocketException(socketException.Value.ErrorCode, ex))
 
