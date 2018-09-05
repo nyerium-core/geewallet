@@ -72,7 +72,12 @@ module JsonRpcSharp =
             tcpClient.ReceiveTimeout <- Convert.ToInt32 Config.DEFAULT_NETWORK_TIMEOUT.TotalMilliseconds
 
             let host,port = hostAndPort()
-            let connectTask = tcpClient.ConnectAsync(host, port)
+            let connectTask =
+                try
+                    tcpClient.ConnectAsync(host, port)
+                with
+                | ex ->
+                    raise <| Exception(sprintf "Could not establish TCP connection to '%s:%d'" host port, ex)
 
             if not (connectTask.Wait(Config.DEFAULT_NETWORK_TIMEOUT)) then
                 raise(ServerUnresponsiveException())
