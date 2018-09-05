@@ -33,7 +33,15 @@ type ServerUnreachableException(message:string, innerException: Exception) =
 type JsonRpcTcpClient (host: string, port: int) =
     let ResolveAsync (hostName: string): Task<IPAddress> =
         // FIXME: loop over all addresses?
-        Task.Run(fun _ -> Dns.GetHostEntry(hostName).AddressList.[0])
+        Task.Run(fun _ ->
+            let addressList = Dns.GetHostEntry(hostName).AddressList
+            let firstAddress = addressList.[0]
+            if (firstAddress.AddressFamily = AddressFamily.InterNetworkV6) then
+                Console.Error.WriteLine
+                    (sprintf "WARNING: host '%s' DNS resolution returned IPv6 address as first entry (%s)"
+                             hostName (firstAddress.ToString()))
+            firstAddress
+        )
 
     let exceptionMsg = "JsonRpcSharp faced some problem when trying communication"
     let ResolveHost(): string =
