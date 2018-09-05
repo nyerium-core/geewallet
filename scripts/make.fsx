@@ -22,15 +22,21 @@ let rec private GatherTarget (args: string list, targetSet: Option<string>): Opt
             failwith "only one target can be passed to make"
         GatherTarget (tail, Some (head))
 
-let GatherPrefix(): string =
+let GatherBuildConfigValue(key: string): string =
     let buildConfig = FileInfo (Path.Combine (__SOURCE_DIRECTORY__, "build.config"))
     if not (buildConfig.Exists) then
         Console.Error.WriteLine "ERROR: configure hasn't been run yet, run ./configure.sh first"
         Environment.Exit 1
     let buildConfigContents = File.ReadAllText buildConfig.FullName
-    (buildConfigContents.Substring ("Prefix=".Length)).Trim()
+    let keyStart = sprintf "%s=" key
+    let prefixIndex = buildConfigContents.IndexOf (keyStart) + keyStart.Length
+    let endOfPrefix = (buildConfigContents.Substring (prefixIndex)).IndexOf("\n")
+    if endOfPrefix < 0 then
+        buildConfigContents.Substring(prefixIndex).Trim()
+    else
+        buildConfigContents.Substring(prefixIndex, endOfPrefix).Trim()
 
-let prefix = GatherPrefix ()
+let prefix = GatherBuildConfigValue "Prefix"
 let libInstallPath = DirectoryInfo (Path.Combine (prefix, "lib", "gwallet"))
 let binInstallPath = DirectoryInfo (Path.Combine (prefix, "bin"))
 
@@ -64,9 +70,10 @@ let PrintNugetVersion () =
 let JustBuild binaryConfig =
     Console.WriteLine "Compiling gwallet..."
     let configOption = sprintf "/p:Configuration=%s" (binaryConfig.ToString())
-    let xbuild = Process.Execute (sprintf "xbuild %s" configOption, true, false)
-    if (xbuild.ExitCode <> 0) then
-        Console.Error.WriteLine "xbuild build failed"
+    let buildTool = GatherBuildConfigValue "BuildTool"
+    let build = Process.Execute (sprintf "%s %s" buildTool configOption, true, false)
+    if (build.ExitCode <> 0) then
+        Console.Error.WriteLine (sprintf "%s build failed" buildTool)
         PrintNugetVersion() |> ignore
         Environment.Exit 1
 

@@ -8,20 +8,33 @@ open System.Linq
 #load "Infra.fs"
 open FSX.Infrastructure
 
-let ConfigCommandCheck (commandName: string) =
+let ConfigCommandCheck (commandName: string) (mandatory:bool): bool =
     Console.Write (sprintf "checking for %s... " commandName)
     if (Process.CommandCheck commandName).IsNone then
         Console.Error.WriteLine "not found"
-        Console.Error.WriteLine (sprintf "configuration failed, please install \"%s\"" commandName)
-        Environment.Exit 1
-    Console.WriteLine "found"
+        if mandatory then
+            Console.Error.WriteLine (sprintf "configuration failed, please install \"%s\"" commandName)
+            Environment.Exit 1
+        false
+    else
+        Console.WriteLine "found"
+        true
 
-ConfigCommandCheck "fsharpc"
-ConfigCommandCheck "xbuild"
-ConfigCommandCheck "mono"
+ConfigCommandCheck "fsharpc" true |> ignore
+let buildTool =
+    let xbuildExists = ConfigCommandCheck "xbuild" false
+    if not xbuildExists then
+        ConfigCommandCheck "msbuild" true |> ignore
+        "msbuild"
+    else
+        if not (ConfigCommandCheck "msbuild" false) then
+            "xbuild"
+        else
+            "msbuild"
+ConfigCommandCheck "mono" true |> ignore
 
 // needed by NuGet.Restore.targets & the "update-servers" Makefile target
-ConfigCommandCheck "curl"
+ConfigCommandCheck "curl" true |> ignore
 
 let rec private GatherOrGetDefaultPrefix(args: string list, previousIsPrefixArg: bool, prefixSet: Option<string>): string =
     let GatherPrefix(newPrefix: string): Option<string> =
@@ -52,7 +65,7 @@ if not (prefix.Exists) then
     Console.Error.WriteLine warning
 
 File.WriteAllText(Path.Combine(__SOURCE_DIRECTORY__, "build.config"),
-                  sprintf "Prefix=%s" prefix.FullName)
+                  sprintf "Prefix=%s\nBuildTool=%s" prefix.FullName buildTool)
 
 let rootDir = DirectoryInfo(Path.Combine(__SOURCE_DIRECTORY__, ".."))
 let version = Misc.GetCurrentVersion(rootDir)
