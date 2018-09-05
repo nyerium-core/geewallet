@@ -1,6 +1,7 @@
 ﻿namespace GWallet.Backend
 
 open System
+open System.Linq
 open System.Net
 open System.Net.Sockets
 open System.Threading.Tasks
@@ -37,9 +38,16 @@ type JsonRpcTcpClient (host: string, port: int) =
             let addressList = Dns.GetHostEntry(hostName).AddressList
             let firstAddress = addressList.[0]
             if (firstAddress.AddressFamily = AddressFamily.InterNetworkV6) then
-                Console.Error.WriteLine
-                    (sprintf "WARNING: host '%s' DNS resolution returned IPv6 address as first entry (%s)"
-                             hostName (firstAddress.ToString()))
+                let ipv4Addresses = addressList.Where(fun addr -> addr.AddressFamily <> AddressFamily.InterNetworkV6)
+                match Seq.tryHead ipv4Addresses with
+                | None ->
+                    Console.Error.WriteLine
+                        (sprintf "WARNING: host '%s' DNS resolution returned only IPv6 address(es) (first: %s)"
+                                 hostName (firstAddress.ToString()))
+                | Some firstIpV4Address ->
+                    Console.Error.WriteLine
+                        (sprintf "WARNING: host '%s' DNS resolution returned IPv6 address as first entry (%s) but has also IPv4 (%s)"
+                                 hostName (firstAddress.ToString()) (firstIpV4Address.ToString()))
             firstAddress
         )
 
