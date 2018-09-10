@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{CE79AB9D
 		Makefile = Makefile
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NS2Test", "src\NS2Test\NS2Test.csproj", "{39360728-AE68-4C7C-8271-ECE11D822457}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{F9448076-88BE-4045-8704-A652D133E036}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9448076-88BE-4045-8704-A652D133E036}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9448076-88BE-4045-8704-A652D133E036}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39360728-AE68-4C7C-8271-ECE11D822457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39360728-AE68-4C7C-8271-ECE11D822457}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39360728-AE68-4C7C-8271-ECE11D822457}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39360728-AE68-4C7C-8271-ECE11D822457}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
