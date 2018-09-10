@@ -1,28 +1,7 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "GWallet.Backend", "src\GWallet.Backend\GWallet.Backend.fsproj", "{96F9B3E5-11F8-4F5F-AADC-51D0D995B3D2}"
-EndProject
-Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "GWallet.Frontend.Console", "src\GWallet.Frontend.Console\GWallet.Frontend.Console.fsproj", "{8413EEF5-69F5-499F-AE01-754E9541EF90}"
-EndProject
-Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "GWallet.Backend.Tests", "src\GWallet.Backend.Tests\GWallet.Backend.Tests.fsproj", "{F9448076-88BE-4045-8704-A652D133E036}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{CE79AB9D-0FB9-4606-B7C6-A78C0858CC54}"
-	ProjectSection(SolutionItems) = preProject
-		configure.fsx = configure.fsx
-		configure.sh = configure.sh
-		fsicheck.sh = fsicheck.sh
-		Infra.fs = Infra.fs
-		make.fsx = make.fsx
-		make.sh = make.sh
-		Makefile = Makefile
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NS2Test", "src\NS2Test\NS2Test.csproj", "{39360728-AE68-4C7C-8271-ECE11D822457}"
-EndProject
-Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "NS2FSTest", "src\NS2FSTest\NS2FSTest.fsproj", "{D05F8577-D437-4C75-AA6F-790B42F8C722}"
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NsTest2Only", "src\NsTest2Only\NsTest2Only\NsTest2Only.csproj", "{64023281-F011-4760-94A6-2C1000636C6E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,30 +9,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{96F9B3E5-11F8-4F5F-AADC-51D0D995B3D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96F9B3E5-11F8-4F5F-AADC-51D0D995B3D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96F9B3E5-11F8-4F5F-AADC-51D0D995B3D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96F9B3E5-11F8-4F5F-AADC-51D0D995B3D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8413EEF5-69F5-499F-AE01-754E9541EF90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8413EEF5-69F5-499F-AE01-754E9541EF90}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8413EEF5-69F5-499F-AE01-754E9541EF90}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8413EEF5-69F5-499F-AE01-754E9541EF90}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F9448076-88BE-4045-8704-A652D133E036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F9448076-88BE-4045-8704-A652D133E036}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F9448076-88BE-4045-8704-A652D133E036}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F9448076-88BE-4045-8704-A652D133E036}.Release|Any CPU.Build.0 = Release|Any CPU
-		{39360728-AE68-4C7C-8271-ECE11D822457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{39360728-AE68-4C7C-8271-ECE11D822457}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{39360728-AE68-4C7C-8271-ECE11D822457}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{39360728-AE68-4C7C-8271-ECE11D822457}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D05F8577-D437-4C75-AA6F-790B42F8C722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D05F8577-D437-4C75-AA6F-790B42F8C722}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D05F8577-D437-4C75-AA6F-790B42F8C722}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D05F8577-D437-4C75-AA6F-790B42F8C722}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
+		{64023281-F011-4760-94A6-2C1000636C6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64023281-F011-4760-94A6-2C1000636C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64023281-F011-4760-94A6-2C1000636C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64023281-F011-4760-94A6-2C1000636C6E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
