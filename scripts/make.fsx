@@ -66,7 +66,7 @@ let JustBuild binaryConfig =
     Console.WriteLine "Compiling gwallet..."
     let xbuildParams = sprintf "%s /p:Configuration=%s"
                                DEFAULT_SOLUTION_FILE (binaryConfig.ToString())
-    let xbuild = Process.Execute (sprintf "msbuild %s" xbuildParams, true, false)
+    let xbuild = Process.Execute (sprintf "msbuild %s /t:restore" xbuildParams, true, false)
     if (xbuild.ExitCode <> 0) then
         Console.Error.WriteLine "xbuild build failed"
         PrintNugetVersion() |> ignore
