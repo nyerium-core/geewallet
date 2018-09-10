@@ -44,4 +44,7 @@
     <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
     <PackageReference Include="NBitcoin" Version="4.0.0.51" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="netstandard" />
+  </ItemGroup>
 </Project>

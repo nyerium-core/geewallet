@@ -134,6 +134,9 @@
     <PackageReference Include="SharpRaven" Version="2.4.0" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="netstandard" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="UtxoCoin\" />
     <Folder Include="Ether\" />
   </ItemGroup>
