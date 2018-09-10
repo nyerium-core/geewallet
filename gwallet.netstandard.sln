@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "Ns2TestFsOnly", "src\Ns2TestFsOnly\Ns2TestFsOnly.fsproj", "{CA0B7259-CAE6-41A9-8AD3-0EB83DB340F7}"
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "Ns2TestFsOnly", "src\Ns2TestFsOnly\Ns2TestFsOnly\Ns2TestFsOnly.fsproj", "{CA0B7259-CAE6-41A9-8AD3-0EB83DB340F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
