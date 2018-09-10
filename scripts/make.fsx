@@ -7,7 +7,7 @@ open System.Linq
 open FSX.Infrastructure
 
 let DEFAULT_FRONTEND = "GWallet.Frontend.Console"
-let BACKEND_SOLUTION_FILE = "gwallet.backend.sln"
+let DEFAULT_SOLUTION_FILE = "gwallet.netstandard.sln"
 
 type BinaryConfig =
     | Debug
@@ -65,8 +65,8 @@ let PrintNugetVersion () =
 let JustBuild binaryConfig =
     Console.WriteLine "Compiling gwallet..."
     let xbuildParams = sprintf "%s /p:Configuration=%s"
-                               BACKEND_SOLUTION_FILE (binaryConfig.ToString())
-    let xbuild = Process.Execute (sprintf "xbuild %s" xbuildParams, true, false)
+                               DEFAULT_SOLUTION_FILE (binaryConfig.ToString())
+    let xbuild = Process.Execute (sprintf "msbuild %s" xbuildParams, true, false)
     if (xbuild.ExitCode <> 0) then
         Console.Error.WriteLine "xbuild build failed"
         PrintNugetVersion() |> ignore
