@@ -121,6 +121,7 @@ let JustBuild binaryConfig =
     // older mono versions (which only have xbuild, not msbuild) can't compile .NET Standard assemblies
     if IsGtkSuitableTarget() then
         BuildSolution "msbuild" "gwallet.linux.sln" binaryConfig "/t:Restore"
+        BuildSolution "msbuild" "gwallet.linux.sln" binaryConfig "/t:Build"
 
     Directory.CreateDirectory(launcherScriptPath.Directory.FullName) |> ignore
     let wrapperScriptWithPaths =
