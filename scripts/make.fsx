@@ -6,7 +6,6 @@ open System.Linq
 #load "Infra.fs"
 open FSX.Infrastructure
 
-let DEFAULT_FRONTEND = "GWallet.Frontend.Console"
 let DEFAULT_SOLUTION_FILE = "gwallet.core.sln"
 
 type BinaryConfig =
@@ -43,6 +42,24 @@ let buildConfigContents =
         |> Map.ofArray
     buildConfigContents
 
+let DefaultBuildTool () =
+    let buildTool = Map.tryFind "BuildTool" buildConfigContents
+    if buildTool.IsNone then
+        failwith "A BuildTool should have been chosen by the configure script, please report this bug"
+    buildTool.Value
+
+let IsGtkSuitableTarget(): bool =
+    (Misc.GuessPlatform() = Misc.Platform.Linux &&
+        // because old Mono's xbuild cannot build the GTK frontend (because it cannot build NetStandard)
+        (not (DefaultBuildTool () = "xbuild")))
+
+let CONSOLE_FRONTEND = "GWallet.Frontend.Console"
+let DefaultFrontend () =
+    if IsGtkSuitableTarget() then
+        "GWallet.Frontend.XF.Gtk"
+    else
+        CONSOLE_FRONTEND
+
 let GetOrExplain key map =
     match map |> Map.tryFind key with
     | Some k -> k
@@ -53,8 +70,6 @@ let libInstallPath = DirectoryInfo (Path.Combine (prefix, "lib", "gwallet"))
 let binInstallPath = DirectoryInfo (Path.Combine (prefix, "bin"))
 
 let launcherScriptPath = FileInfo (Path.Combine (__SOURCE_DIRECTORY__, "bin", "gwallet"))
-let mainBinariesPath = DirectoryInfo (Path.Combine(__SOURCE_DIRECTORY__, "..",
-                                                   "src", DEFAULT_FRONTEND, "bin", "Release"))
 
 let wrapperScript = """#!/bin/sh
 set -e
@@ -99,20 +114,18 @@ let BuildSolution buildTool solutionFileName binaryConfig extraOptions =
 
 let JustBuild binaryConfig =
     Console.WriteLine "Compiling gwallet..."
-    let buildTool = Map.tryFind "BuildTool" buildConfigContents
-    if buildTool.IsNone then
-        failwith "A BuildTool should have been chosen by the configure script, please report this bug"
 
-    BuildSolution buildTool.Value DEFAULT_SOLUTION_FILE binaryConfig String.Empty
+    let buildTool = DefaultBuildTool()
+    BuildSolution buildTool DEFAULT_SOLUTION_FILE binaryConfig String.Empty
 
     // older mono versions (which only have xbuild, not msbuild) can't compile .NET Standard assemblies
-    if buildTool.Value = "msbuild" && Misc.GuessPlatform () = Misc.Platform.Linux then
+    if IsGtkSuitableTarget() then
         BuildSolution "msbuild" "gwallet.linux.sln" binaryConfig "/t:Restore"
 
     Directory.CreateDirectory(launcherScriptPath.Directory.FullName) |> ignore
     let wrapperScriptWithPaths =
         wrapperScript.Replace("$TARGET_DIR", libInstallPath.FullName)
-                     .Replace("$GWALLET_PROJECT", DEFAULT_FRONTEND)
+                     .Replace("$GWALLET_PROJECT", CONSOLE_FRONTEND)
     File.WriteAllText (launcherScriptPath.FullName, wrapperScriptWithPaths)
 
 let MakeCheckCommand (commandName: string) =
@@ -121,7 +134,7 @@ let MakeCheckCommand (commandName: string) =
         Environment.Exit 1
 
 let GetPathToFrontend (binaryConfig: BinaryConfig) =
-    Path.Combine ("src", DEFAULT_FRONTEND, "bin", binaryConfig.ToString())
+    Path.Combine ("src", DefaultFrontend(), "bin", binaryConfig.ToString())
 
 let maybeTarget = GatherTarget (Util.FsxArguments(), None)
 match maybeTarget with
@@ -187,6 +200,9 @@ match maybeTarget with
     Console.WriteLine "Installing gwallet..."
     Console.WriteLine ()
     Directory.CreateDirectory(libInstallPath.FullName) |> ignore
+
+    let mainBinariesPath = DirectoryInfo (Path.Combine(__SOURCE_DIRECTORY__, "..",
+                                                       "src", CONSOLE_FRONTEND, "bin", "Release"))
     Misc.CopyDirectoryRecursively (mainBinariesPath, libInstallPath)
 
     let finalPrefixPathOfWrapperScript = FileInfo (Path.Combine(binInstallPath.FullName, launcherScriptPath.Name))
@@ -205,7 +221,7 @@ match maybeTarget with
     let debug = BinaryConfig.Debug
     JustBuild debug
 
-    let pathToFrontend = Path.Combine(GetPathToFrontend debug, DEFAULT_FRONTEND + ".exe")
+    let pathToFrontend = Path.Combine(GetPathToFrontend debug, DefaultFrontend() + ".exe")
 
     let proc = System.Diagnostics.Process.Start
                    (fullPathToMono.Value, pathToFrontend)

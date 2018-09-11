@@ -2,8 +2,12 @@ image: ubuntu:18.04
 
 before_script:
   - apt-get update
+
   # needed to download NuGet
   - apt-get install -y curl
+
+  # to test the zip make target
+  - apt-get install -y zip
 
 stages:
   - build
@@ -15,7 +19,7 @@ stockmono_build:
     # https://askubuntu.com/a/1013396
     - DEBIAN_FRONTEND=noninteractive apt-get install -y nuget mono-complete mono-xbuild fsharp
 
-    - time (./configure.sh && make && make install)
+    - time (./configure.sh && make && make install && make zip)
     # so that we log the version of nuget for when it works
     - make nuget
 
@@ -44,7 +48,7 @@ newmono_build:
     - apt update
     - apt install -y mono-devel fsharp
 
-    - time (./configure.sh && make && make install)
+    - time (./configure.sh && make && make install && make zip)
     # so that we log the version of nuget for when it works
     - make nuget
 
