@@ -160,21 +160,27 @@ match maybeTarget with
 
     let release = BinaryConfig.Release
     JustBuild release
-    let binDir = "bin"
-    Directory.CreateDirectory(binDir) |> ignore
+    let binDir = Directory.CreateDirectory("bin")
 
     let zipName = sprintf "gwallet.v.%s.zip" version
-    let pathToZip = Path.Combine(binDir, zipName)
+    let pathToZip = Path.Combine(binDir.FullName, zipName)
     if (File.Exists (pathToZip)) then
         File.Delete (pathToZip)
 
+    let previousCurrentDir = Directory.GetCurrentDirectory()
     let pathToFrontend = GetPathToFrontend release
-    let zipLaunch = sprintf "%s -j -r %s %s"
-                            zipCommand pathToZip pathToFrontend
+    if not (Directory.Exists pathToFrontend) then
+        failwith "Release folder should exist after Release is built"
+
+    Directory.SetCurrentDirectory pathToFrontend
+    let zipLaunch = sprintf "%s -r %s ."
+                            zipCommand pathToZip
     let zipRun = Process.Execute(zipLaunch, true, false)
     if (zipRun.ExitCode <> 0) then
         Console.Error.WriteLine "ZIP compression failed"
         Environment.Exit 1
+
+    Directory.SetCurrentDirectory previousCurrentDir
 
 | Some("check") ->
     Console.WriteLine "Running tests..."
